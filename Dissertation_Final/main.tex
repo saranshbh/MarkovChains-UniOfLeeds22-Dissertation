@@ -1,0 +1,151 @@
+% ------------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------------
+\documentclass[11pt,a4paper,twoside,openright]{report}
+
+\renewcommand\figurename{\em Figure}
+\renewcommand\tablename{\em Table}
+
+\addtolength{\textwidth}{2cm}
+\addtolength{\oddsidemargin}{-0cm}
+\addtolength{\evensidemargin}{-2cm}
+\addtolength{\textheight}{2cm}
+\addtolength{\topmargin}{-1cm}
+
+\usepackage{projectreport}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage[euler]{textgreek}
+\usepackage[math-style=ISO]{unicode-math}
+
+\usepackage{amsmath, amsthm, amssymb, bm}
+\usepackage{times, graphicx, psfrag, multicol}
+\usepackage{setspace}
+\usepackage{natbib}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning}
+\usepackage{multirow, array}
+\usepackage{tikz}
+\usepackage{csquotes}
+
+\usepackage[newfloat]{minted}
+\usepackage{caption}
+
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\SetupFloatingEnvironment{listing}{name=Source Code}
+\usetikzlibrary{shapes,arrows,positioning}
+\setminted[python]{breaklines, framesep=2mm, fontsize=\footnotesize, numbersep=5pt}
+
+\usetikzlibrary{automata}
+\usetikzlibrary{positioning}  %                 ...positioning nodes
+\usetikzlibrary{arrows}       %                 ...customizing arrows
+\tikzset{node distance=4.5cm, % Minimum distance between two nodes. Change if necessary.
+         every state/.style={ % Sets the properties for each state
+           semithick,
+           fill=gray!10},
+         initial text={},     % No label on start arrow
+         double distance=4pt, % Adjust appearance of accept states
+         every edge/.style={  % Sets the properties for each transition
+         draw,
+           ->,>=stealth',     % Makes edges directed with bold arrowheads
+           auto,
+           semithick}}
+
+
+\renewcommand\figurename{\em Figure}
+\renewcommand\tablename{\em Table}
+
+%\addtolength{\textwidth}{2cm}
+%\addtolength{\oddsidemargin}{-0cm}
+%\addtolength{\evensidemargin}{-2cm}
+%\addtolength{\textheight}{2cm}
+%\addtolength{\topmargin}{-1cm}
+
+
+\DeclareCaptionType{equ}[][]
+
+% ------------------------------------------------------------------------------
+% Enter your details here
+% ------------------------------------------------------------------------------
+\newcommand{\name}{Saransh Bhargava}
+\newcommand{\course}{MSc. Data Science and Analytics}
+% \newcommand{\course}{BSc. Computer Science}
+% \newcommand{\course}{MEng. Computer Science}
+\newcommand{\projecttitle}{Markov Chain Analysis of Textual Data}
+\newcommand{\submissiondate}{August 2022}
+\newcommand{\submissionyear}{2022}
+
+\newcommand\MyBox[2]{
+  \fbox{\lower0.75cm
+    \vbox to 1.7cm{\vfil
+      \hbox to 5.5cm{\hfil\parbox{2.4cm}{#1\\#2}\hfil}
+      \vfil}%
+  }%
+}
+
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\begin{document}
+
+\maketitle
+
+% ------------------------------------------------------------------------------
+% Top matter
+% ------------------------------------------------------------------------------
+\chapter*{Abstract}
+% \blindtext[1] % creates dummy text
+
+With this dissertation, we are trying to create a working Markov Chain model, which works in tandem with character tokenization, and a smartly advanced version of the Naive Bayes' Theorem in order to predict the true origin of a given piece of text.
+
+The problem statement we're trying to solve is to predict which text was written by which author and is part of which book when we randomly pick up some text. We accomplish this task by focusing on characters as the most elementary part of the model, as there has been immense research already carried out on words and sub-words tokenization with novels being the source of data.
+
+We utilize two main aspects of Markov Chains, which are State Probabilities and Transition Matrices, the entirety of Bayes' Rule, and converting it into a logarithmic working example of the Theorem. The way our training works is by calculating the overall probabilities of each character's occurrence and creating a matrix with all characters acting as the indices and columns for the probability matrix to be a real transition matrix.
+
+We use logarithms with the Bayes' rule for probability calculations as all the probabilities are significantly small ranging between 0 and 1, and taking a logarithm, brings them to a negative value but converts the multiplication into a summation from the logarithm product rule. This also ensures our calculations are not computationally difficult.
+
+During training, we also find that some novels have unique characters. Thus, for the purposes of our training, the probabilities of these characters occurring in the piece of text become a feature and are non-zero. However, we also include a smoothing function, ensuring there is no overall data loss and adding a small and insignificant value to the non-occurrences of these characters in the text. 
+
+During testing, we then use these probabilities over the character set probabilities we calculated during training and figure out the highest value achieved for a certain book. This helps in figuring out the final results and then, we are able to predict the highest value would tentatively correspond to the actual novel. This is evident in the section \ref{sec:results} provided below.
+
+However, we do see one issue. When the book has very minimal use of special characters, a problem arises that the book in context results in a higher log probability. But this is a drawback of character tokenization as we are not effectively capturing the true probabilities, but rather just higher-level character occurrences. This is easily circumvented from the already performed research on word tokenization among a wide variety of textual datasets. 
+
+In all, from our training set, we are able to achieve an overall 75\% accuracy, which is not that bad considering we are only working with a preliminary model and no levels of neural networks or convolution network layers. 
+
+\chapter*{Acknowledgements}
+This dissertation has been carried out in collaboration and with the guidance of Dr. Jochen Voss. My own contributions, fully and explicitly indicated in the thesis are the entirety of the project with constant assistance from the professor and some literature citations from the notes of Professor Matthew Alridge from the module MATH 2750, \textcite{MATH-2750} and Professor Jochen Voss's book, \textcite{voss:2013}. 
+
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+% ------------------------------------------------------------------------------
+% Main matter
+% Chapters are added to the document using the \include{chapterx} command
+% ------------------------------------------------------------------------------
+\newpage
+\setcounter{page}{0}
+\pagenumbering{arabic}
+\include{chap1_intro.tex}
+\include{chap2_whynovels.tex}
+\include{chap3_markov.tex}
+\include{chap4_bayes.tex}
+\include{chap5_mctext.tex}
+\include{chap6_novels.tex}
+\include{chap7_conclusion.tex}
+
+% ------------------------------------------------------------------------------
+% Reference list
+% ------------------------------------------------------------------------------
+\addcontentsline{toc}{chapter}{References}
+\renewcommand\bibname{References}
+\printbibliography
+
+% ------------------------------------------------------------------------------
+% Appendices
+% ------------------------------------------------------------------------------
+\include{appendix}
+
+\end{document}

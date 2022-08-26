@@ -1,0 +1,15 @@
+
+
+\chapter{Conclusion and Possibilities}
+\label{cha:conclusion}
+
+In this dissertation, a simple algorithm, \ref{cha:markov-chains} along with a derivation of \ref{cha:bayes}, to reach a new custom model namely \ref{cha:markov_chain_text}, which we implemented using a very simple dataset of novels acquired from \textcite{project-gutenburg}. Markov Chains are very useful in classifying texts in books as they have a very unique process of identifying specific features. 
+
+In general, the most widely used implementation of Markov Chains with books is using words that we went through in the section \ref{sec:token_words} in chapter 5. This works really well when words act as nodes of the Markov Chain and edges are then the probabilities. However, we found that working with characters was a bit tricky, which was quite evident in the results as well, where we saw a weird result for one of the tests predicting another book and placing the original book and author in second place. 
+
+Now, we could also have worked with a true neural network model, as Markov Chains are an example of a probability-based completely connected layer. In case we were to increase layers of modeling in our training, introducing new or existing algorithms, we could have seen better results as well. In the near future, this same project can be advanced by implementing newer layers of classification algorithms such as Random Forest Classifier, Gradient Descent Classifier, etc. The performance could also have been wildly improved if we tried to use a different variation of statistical technique, such as logarithm along with square-root or cube-root of the original probabilities, but that is a reason to speculate the probabilities. 
+
+Finally, I would like to mention that characters were a chosen form, in order to find a relationship between different character occurrences rather than words or subwords as this way, I was able to both reduce computational requirements and keep the complexity at a minimal value.
+
+
+

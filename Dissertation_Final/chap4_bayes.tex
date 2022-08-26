@@ -1,0 +1,420 @@
+% Chapter 1
+% Delete this content and replace it with your own
+% ------------------------------------------------------------------------------
+\chapter{Bayesian Classification} % enter the name of the chapter here
+\label{cha:bayes} % enter the chapter label here (for cross-referencing)
+
+Bayes Theorem provides a principled way for calculating a conditional probability.
+
+It is a deceptively simple calculation, although it can be used to easily calculate the conditional probability of events where intuition often fails. Although it is a powerful tool in the field of probability, Bayes Theorem is also widely used in the field of machine learning. Its use in a probability framework for fitting a model to a training dataset and in developing models for classification predictive modeling problems such as the Bayes Optimal Classifier and Naive Bayes.
+
+The main aim of this chapter is to provide some base for how Bayes' theorem works and how we could connect it with the main topic of our dissertation, Markov chains. Bayes' conditional probability has various uses and is even used in the probability matrix. And thus, at the end of this chapter, we shall understand four main knowledge pointers which are as follows:
+
+\begin{itemize}
+    \item Bayes Theorem definition and the methods involved in its implementation.
+    \item Terms in the Bayes theorem calculation and their uses.
+    \item Examples of Bayes theorem usage in classifiers, optimization, and causal models.
+    \item Usage of Bayes' theorem in a discrete Markov chain model.
+\end{itemize}
+
+\section{Types of Probabilities} % enter the name of the section here
+\label{sec:bayes-theorem-conditional-probability} % enter the section label here (for cross-referencing)
+
+Before we understand what Bayes Theorem is, we need to be clear about what marginal, joint, and conditional probabilities are. 
+
+In this section, we shall go over what they mean and how to implement them in theory. Probability is simply how likely something is to happen. Whenever we're unsure about the outcome of an event, we can talk about the probabilities of certain outcomes—how likely they are. Many events can't be predicted with total certainty. The best we can say is how likely they are to happen, using the idea of probability.
+
+For example, the likeliness of a completely fair coin toss to yield Heads or Tails would exactly be 0.5 if the coin the absolutely balanced. This 0.5 is the probability of either Heads or Tails showing up at a given toss.
+
+Now, let us go over what the different types of probabilities are.
+
+\subsection{Marginal Probabilities} %enter the name of the subsection here
+\label{sec:bayes-marginal-probabilities} % enter the subsection label here (for cross-referencing)
+
+The probability of an event occurring $P \left(A\right)$, may be thought of as an unconditional probability.  It is not conditioned on another event. 
+Marginal probability is the probability of an event, irrespective of other random variables. If the random variable is independent, then it is the probability of the event directly, otherwise, if the variable is dependent upon other variables, then the marginal probability is the probability of the event summed over all outcomes for the dependent variables, called the sum rule.
+
+\textbf{Example 1}: The probability that a card drawn from a deck of 52 is red is given as $P\left(red\right) &= 0.5$. \\
+\textbf{Example 2}: The probability that a card drawn from the same deck is a 4 is calculated to be $P\left(four\right) &= \frac{1}{13}$.
+
+\subsection{Joint Probabilities}
+\label{sec:bayes-joint-probabilities}
+
+The joint probability is the probability of two (or more) simultaneous events, often described in terms of events A and B from two dependent random variables, e.g. X and Y. The joint probability is often summarized as just the outcomes, e.g. A and B is written as $P\left(A-and-B\right)$.  The probability of event A and event B occurring.  It is the probability of the intersection of two or more events.  The probability of the intersection of A and B may be written as $P \left( A \cap B \right)$.
+
+\textbf{Example}: The probability that a card is a four and red shall be denoted and calculated as $P\left(four-and-red\right) &= \frac{2}{52} &= \frac{1}{26}$.  (There are two red fours in a deck of 52, the 4 of hearts and the 4 of diamonds).
+
+\subsection{Conditional Probabilities}
+\label{sec:bayes-conditional-probabilities}
+
+The conditional probability is the probability of one event given the occurrence of another event, often described in terms of events A and B from two dependent random variables e.g. X and Y.
+$P\left(A|B\right)$ is the probability of event A occurring, given that event B occurs. 
+
+\textbf{Example}: Given that we drew a red card, what’s the probability that it’s a four $P\left(four|red\right) &= \frac{2}{26} &= \frac{1}{13}$. So out of the 26 red cards (given a red card), there are two fours that explain the calculation.
+
+\section{Miscellaneous Probability Functions}
+
+The joint probability can be calculated using conditional probability. The equation goes as follows:
+
+\begin{equ}[!ht]
+    \begin{equation}
+    \begin{split}
+        \label{eq:joint-prob-product-rule}
+        P\left(A, B\right) &= P\left(A|B\right) * P\left(B\right)
+    \end{split}
+    \end{equation}
+\caption{\textit{This is known as the product rule of probability}}
+\end{equ}
+
+Additionally, joint probability is symmetrical and thus, $P\left(A, B\right) = P\left(B, A\right)$.
+
+Next, conditional probability is calculated using the joint probability, thus, we have the following equation.
+
+\begin{equ}[!ht]
+    \begin{equation}
+    \begin{split}
+        \label{eq:condn-prob-rule-p1}
+        P\left(A | B\right) &= \frac{P\left(A, B\right)}{P\left(B\right)}
+    \end{split}
+    \end{equation}
+\caption{\textit{Derivation of conditional probability through join probability}}
+\end{equ}
+
+However, conditional probability is not symmetrical. Thus, $P\left(A|B\right) \neq P\left(B|A\right)$.
+
+Now, we can also calculate conditional probability through a secondary route. The next couple equations shall make that clearer.
+
+\textbf{\begin{equ}[!ht]
+    \begin{equation}
+    \begin{split}
+        \label{eq:condn-prob-rule-p2}
+        P\left(A | B\right) &= \frac{P\left(B | A\right) * P\left( A\right)}{P\left(B\right)}
+    \end{split}
+    \end{equation}
+\caption{\textit{This is the conditional probability formula}}
+\end{equ}}
+
+The reverse of this rule also works. Thus, 
+
+\textbf{\begin{equ}[!ht]
+    \begin{equation}
+    \begin{split}
+        \label{eq:condn-prob-rule-p2-rev}
+        P\left(B | A\right) &= \frac{P\left(A | B\right) * P\left( B\right)}{P\left(A\right)}
+    \end{split}
+    \end{equation}
+\caption{\textit{This is the conditional probability reverse formula}}
+\end{equ}}
+
+We use equations \ref{eq:condn-prob-rule-p2} and \ref{eq:condn-prob-rule-p2-rev} the most, as in most cases, joint probability from equation \ref{eq:joint-prob-product-rule} is tough to calculate in most cases. \textbf{These alternative equations of the conditional probabilities are known as Bayes' Rules or the Bayes' Theorem}.
+
+\section{Bayes' Rule}
+\label{sec:bayes-rule}
+
+From equations \ref{eq:condn-prob-rule-p2} and \ref{eq:condn-prob-rule-p2-rev}, we were able to deduce that conditional probabilities do not need to rely on joint probabilities as the latter is a lot tougher to calculate and not generally available.
+
+Thus, the final Bayes' Theorem can be deduced as follows.
+
+\textbf{\begin{equ}[!ht]
+    \begin{equation}
+    \begin{split}
+        \label{eq:bayes-rule-pb}
+        P\left(B\right) &= P\left(B|A\right) * P\left(A\right) + P\left(B|not A\right) * P\left(not A\right)
+    \end{split}
+    \end{equation}
+\caption{\textit{Conditional Probability designed around dependent event}}
+\end{equ}}
+
+Thus, we can use the equation \ref{eq:bayes-rule-pb} mentioned above in the conditional probability equation \ref{eq:condn-prob-rule-p2}, and have the rule re-defined as follows:
+
+\textbf{\begin{equ}[!ht]
+    \begin{equation}
+    \begin{split}
+        \label{eq:bayes-rule-pb-final}
+         P\left(A | B\right) = \frac{\left(P\left(B | A\right) * P\left(A\right)\right)}{\left(P\left(B|A\right) * P\left(A\right) + P\left(B|not A\right) * P\left(not A\right)\right)}
+    \end{split}
+    \end{equation}
+\caption{\textit{Conditional Probabilities}}
+\end{equ}}
+
+Additionally, keep in mind that $P\left(not A\right)$ is nothing but $1 - P\left(A\right)$. In the following sub-sections, we shall understand the terms of the Bayes' Rule.
+
+\subsection{Terms of the Theorem}
+
+The terms in the Bayes Theorem equation are given names depending on the context where the equation is used.
+
+It can be helpful to think about the calculation from these different perspectives and help to map your problem onto the equation.
+
+We need to keep in mind that the result $P\left(A | B\right)$ is referred to as the \textbf{posterior probability} and $P\left(A\right)$ is referred to as the \textbf{prior probability}. A quick link to an article explaining this is \textcite{ml_bayes_theorem}.
+
+Similarly, $P\left(B | A\right)$ is referred to as the \textbf{likelihood} and $P\left(B\right)$ is referred to as the \textbf{evidence}.
+
+\begin{itemize}
+    \item $P\left(B | A\right)$ : Posterior Probability
+    \item $P\left(A\right)$ : Prior Probability
+    \item $P\left(B | A\right)$ : Likelihood
+    \item $P\left(B\right)$ : Evidence
+\end{itemize}
+
+Let us explain the above terms with the help of an example. The example we shall take is exactly the topic of our dissertation. Let's say we need to find whether \textbf{novel A} is written by an \textbf{author A} or by \textbf{author B}, given we have another \textbf{novel B} written by one of these authors. We need to define the probability just on the basis of identifying all the texts from either of the books. Thus, let us consider $P\left(novel \textunderscore A\right)$ be the Prior, $P\left(novel\textunderscore A | author\textunderscore A\right)$ be the Likelihood and $P\left(author\textunderscore A\right)$ be the evidence.
+Thus, this gives us the final equation:
+
+\textbf{\begin{equ}[!ht]
+    \begin{equation}
+    \begin{split}
+        \label{eq:bayes-rule-novel}
+         P\left(author\textunderscore A | novel\textunderscore A\right) = P\left(novel\textunderscore A | author\textunderscore A\right) * P\left(author \textunderscore A\right) \div P\left(novel \textunderscore A\right)
+    \end{split}
+    \end{equation}
+\caption{\textit{An example with novels}}
+\end{equ}}
+
+In the next couple section, we shall understand how Bayes' Formula can be used in Python as well as understand how Bayes' classifier can be built. 
+
+\section{Code for Bayes' Rule}
+\label{sec:python-bayes-rule}
+
+Consider a human population that may or may not have cancer (Cancer is True or False) and a medical test that returns positive or negative for detecting cancer (Test is Positive or Negative). With this example, we shall be able to define the problem, as well as understand how to code Bayes' rule within Python. Now, with this scenario, we try to solve for the problem as follows :
+
+\textit{If a randomly selected patient has the test and it comes back positive, what is the probability that the patient has cancer?}
+
+We take this example from the article \textcite{ml_bayes_theorem}.
+
+Medical tests are not free of errors. Thus, in order to predict whether a test which has given a positive result is truly positive or not, we consider a 2 by 2 matrix. This matrix is termed as the confusion matrix, which is used as a key metric in classification, which we shall delve deeper in the section \ref{sec:bayes-classification}.
+
+\noindent
+\renewcommand\arraystretch{1.5}
+\setlength\tabcolsep{0pt}
+\begin{tabular}{c >{\bfseries}r @{\hspace{0.7em}}c @{\hspace{0.4em}}c @{\hspace{0.7em}}l}
+\label{Tab:confusion-matrix}
+  \multirow{10}{*}{\parbox{1.7cm}{\bfseries\raggedleft actual}} & 
+    & \multicolumn{2}{c}{\bfseries Confusion Matrix} & \\
+  & & \bfseries p & \bfseries n & \bfseries total \\
+  & p$'$ & \MyBox{True Positive}{} & \MyBox{False Negative}{} & P$'$ \\[2.4em]
+  & n$'$ & \MyBox{False Positive}{} & \MyBox{True Negative}{} & N$'$ \\
+  & total & P & N &
+\end{tabular}
+
+Before we begin with any coding, let us go over how to theoretically solve the table \ref{Tab:confusion-matrix}.
+
+Sometimes a patient will have cancer, but the test will not detect it. This capability of the test to detect cancer is referred to as the sensitivity, or the \textbf{true positive} rate in the table \ref{Tab:confusion-matrix}. We will contrive a sensitivity value for the test. The test is good, but not great, with a true positive rate or sensitivity of 85 \%. That is, of all the people who have cancer and are tested, 85 \% of them will get a positive result from the test.
+
+Therefore, $P\left(Test = Positive | Cancer = True\right) = 0.85$. 
+
+Now similarly, we can use a contrived up number assuming the probability of cancer is low, and use a contrived base rate value of one person in 5,000, or (0.0002), 0.02 \%. Thus, $P\left( Cancer=True\right) = 0.0002$. There, using the equation \ref{eq:condn-prob-rule-p1}, we can redefine the equation for our needs as below.
+
+\textbf{\begin{equ}[!ht]
+    \begin{equation}
+    \begin{split}
+        \label{eq:bayes-rule-cancer}
+        P\left( Cancer = True | Test = Positive\right) = \frac{P\left(Test=Positive | Cancer=True\right) * P\left(Cancer=True\right)}{P\left(Test=Positive\right)}
+    \end{split}
+    \end{equation}
+\caption{\textit{Cancer example for Bayes' Rule}}
+\end{equ}}
+
+We know the probability of the test being positive given that the patient has cancer is 85\%, and we know the base rate or the prior probability of a given patient having cancer is 0.02\%. Similarly, from equation \ref{eq:bayes-rule-pb}, we get the following equation.
+
+\textbf{\begin{equ}[!ht]
+    \begin{equation}
+    \begin{split}
+    \begin{aligned}
+        \label{eq:bayes-rule-cancer-2}
+        P\left(Test=Positive\right) &= \\
+        P\left(Test=Positive|Cancer=True\right) * P\left(Cancer=True\right) &+ \\
+        P\left(Test=Positive|Cancer=False\right) * P\left(Cancer=False\right) \\
+    \end{aligned}
+    \end{split}
+    \end{equation}
+\caption{}
+\end{equ}}
+
+Now first, we calculate $P\left(Cancer=False\right)$ which is nothing but the inverse of cancer being true, which was 0.0002 in probability. Thus, $P\left(Cancer=False\right) = 1 - P\left(Cancer=True\right) = 1 - 0.0002 = 0.9998$. We still do not know the probability of a positive test result given no cancer. This requires additional information. Specifically, we need to know how good the test is at correctly identifying people that do not have cancer. That is, testing negative result (Test=Negative) when the patient does not have cancer (Cancer=False), called the true negative rate or the specificity. Let us use a random specificity for this value of 95 \%. Thus, $P\left(Test=Negative | Cancer=False\right) = 0.95$.  
+
+Thus, with all this information, $P\left(Test=Positive|Cancer=False\right) &= \\  1 – P\left(Test=Negative | Cancer=False\right) = 1 - 0.95 = 0.05$. Thus, plugging in all the values into equation \ref{eq:bayes-rule-cancer-2}. $P\left(Test=Positive\right) = 0.85 * 0.0002 + 0.05 * 0.9998 = 0.05016$.
+
+Excellent, so the probability of the test returning a positive result, regardless of whether the person has cancer or not is about 5 \%. Now, we finally have all the information needed to calculate the probability using our Bayes' Theorem and estimate whether a person has cancer or not based on whether or not they tested positive on a test. Inputting all the information into equation \ref{eq:bayes-rule-cancer}, we get the values as follows. 
+
+$P\left(Cancer=True | Test=Positive\right) = \frac{0.85 * 0.0002}{0.05016} = 0.003389154704944$.
+
+The calculation suggests that if the patient is informed they have cancer with this test, then there is only a 0.33\% chance that they have cancer. \textbf{This is a very bad diagnostic}. The test is completely unreliable. This is a little rare a case, and we typically have to calculate the bits we need and plug them in, as we did in this case. In our scenario, we were given 3 pieces of information, the base rate, the  sensitivity (or true positive rate), and the specificity (or true negative rate).
+
+\begin{itemize}
+    \item \textbf{Sensitivity:} 85\% of people with cancer will get a positive test result.
+    \item \textbf{Base Rate:} 0.02\% of people have cancer.
+    \item \textbf{Specificity:} 95\% of people without cancer will get a negative test result.
+\end{itemize}
+
+Now we finally show how we could code this in Python.
+
+\begin{code}
+\begin{minted}[frame=single,framesep=10pt]{python}
+# Calculate P(A|B) given P(A), P(B|A), P(B|not A)
+def bayes_theorem(p_a, p_b_given_a, p_b_given_not_a):
+    # calculate P(not A)
+    not_a = 1 - p_a
+    # calculate P(B)
+	p_b = p_b_given_a * p_a + p_b_given_not_a * not_a
+	# calculate P(A|B)
+	p_a_given_b = (p_b_given_a * p_a) / p_b
+	return p_a_given_b
+
+# P(A)
+p_a = 0.0002
+# P(B|A)
+p_b_given_a = 0.85
+# P(B|not A)
+p_b_given_not_a = 0.05
+
+# calculate P(A|B)
+result = bayes_theorem(p_a, p_b_given_a, p_b_given_not_a)
+
+# summarize
+print('P(A|B) = %.3f%%' % (result * 100))
+\end{minted}
+\end{code}
+
+This would end with the result printing as $P\left(A|B\right) = 0.339\%$.
+
+Finally, in this section, we shall understand the ways a confusion matrix, mentioned in \ref{Tab:confusion-matrix} can be used to determine metrics for a classification system. There are three terms we shall be going in depth, and shall figure out the formula for each of them using the values from our confusion matrix. These terms are namely, \textbf{Precision, Recall and Accuracy}. Keep in mind, for the purposes of this task, we shall be referring to all the values via their abbreviation. Here are the terms we learnt about from the confusion matrix. 
+
+\begin{itemize}
+    \item True Positive : TP
+    \item True Negative : TN
+    \item False Positive : FP
+    \item False Negative : FN
+\end{itemize}
+
+In all cases, the target of a confusion matrix and prior model development is to maximize the True Positives & False Negatives and minimize the True Negatives and False Positives. This leads us to the three terms mentioned above. Precision, Recall and Accuracy. These are simple formulae designed around the 2x2 confusion matrix, with which we can calculate the overall closeness within the model.
+A true positive or true negative is a data point that the algorithm correctly classified as true or false, respectively. A false positive or false negative, on the other hand, is a data point that the algorithm incorrectly classified.
+
+\subsection{Accuracy}
+\label{sec:accuracy-confusion-matrix}
+
+The exact formula for accuracy is as follows:
+
+\textbf{\begin{equ}[H]
+    \begin{equation}
+    \begin{split}
+    \begin{aligned}
+        \label{eq:accuracy-confusion-matrix}
+        Accuracy = \frac{TP + FN}{TP + TN + FP + FN}
+    \end{aligned}
+    \end{split}
+    \end{equation}
+\caption{}
+\end{equ}}
+
+\textbf{Accuracy} is the number of correctly predicted data points out of all the data points. More formally, it is defined as the number of true positives and true negatives divided by the number of true positives, true negatives, false positives, and false negatives. 
+
+\subsection{Precision}
+\label{sec:precision-confusion-matrix}
+
+The exact formula for precision is as follows:
+
+\textbf{\begin{equ}[H]
+    \begin{equation}
+    \begin{split}
+    \begin{aligned}
+        \label{eq:precision-confusion-matrix}
+        Accuracy = \frac{TP}{TP + FP}
+    \end{aligned}
+    \end{split}
+    \end{equation}
+\caption{}
+\end{equ}}
+
+\textbf{Precision} is a useful metric in cases where False Positive is a higher concern than False Negatives. \textbf{Precision} is important in music or video recommendation systems, e-commerce websites, etc. Wrong results could lead to customer churn and be harmful to the business.
+
+
+\subsection{Recall}
+\label{sec:recall-confusion-matrix}
+
+The exact formula for accuracy is as follows:
+
+\textbf{\begin{equ}[H]
+    \begin{equation}
+    \begin{split}
+    \begin{aligned}
+        \label{eq:recall-confusion-matrix}
+        Accuracy = \frac{TP}{TP + FN}
+    \end{aligned}
+    \end{split}
+    \end{equation}
+\caption{}
+\end{equ}}
+
+\textbf{Recall} is a useful metric in cases where False Negative trumps False Positive. \textbf{Recall} is important in medical cases where it does not matter whether we raise a false alarm but the actual positive cases should not go undetected.
+
+
+\section{Bayes' Theorem for Classification}
+\label{sec:bayes-classification}
+
+Classification is a predictive modeling problem that involves assigning a label to a given input data sample. The problem of classification predictive modeling can be framed as calculating the conditional probability of a class label given a data sample. 
+
+\textbf{\begin{equ}[H]
+    \begin{equation}
+    \begin{split}
+    \begin{aligned}
+        \label{eq:bayes-classification-p1}
+        P\left(class|data\right) = \frac{P\left(data|class\right)}{P\left(data\right)}
+    \end{aligned}
+    \end{split}
+    \end{equation}
+\caption{Where $P\left(class|data\right)$ is the probability of a class given the some data.}
+\end{equ}}
+
+This calculation can be performed for each class in the problem and the class that is assigned the largest probability can be selected and assigned to the input data.
+
+The priors for the class and the data are easy to estimate from a training dataset if the dataset is suitability representative of the broader problem. The conditional probability of the observation based on the class $P\left(data|class\right)$ is not feasible unless the number of examples is extraordinarily large, e.g. large enough to effectively estimate the probability distribution for all different possible combinations of values. This is almost never the case, we will not have sufficient coverage of the domain.
+
+
+\subsection{Naive Bayes Classifier}
+\label{sec:naive-bayes-classifier}
+
+The main reason for using Bayes' Theorem for a conditional probability classification model is to ease the model of high-level calculations and overall, reduce the complexities involved. Bayes Theorem assumes that each input variable is dependent upon all other variables. This is a cause of complexity in the calculation. We can remove this assumption and go with the consideration that each of the input variables provided are random and independent of each other. In other words, the best way to consider a classification model with Bayes' Theorem would be to ensure all input variables are independently identically distributed (i.i.d.) over a given axis.
+
+This changes the model from a dependent conditional probability model to an independent conditional probability model and dramatically simplifies the calculation. This means that we calculate $P\left(data|class\right)$ for each input variable separately and multiple the results together.
+Thus, let us consider we have n variables, namely $x_1, x_2, x_3, \cdots, x_n$. We have one class defined over a given set of data. Then, we can use the equation \ref{eq:bayes-classification-p1} into a few smaller segments which remove the necessity of finding any combined probabilities. This gives us the following equation.
+
+\textbf{\begin{equ}[H]
+    \begin{equation}
+    \begin{split}
+    \begin{aligned}
+        \label{eq:naive-bayes-classifier}
+        P\left(class|x_1, x_2, \cdots, x_n \right) = P\left(x_1|class\right) * P\left(x_2|class\right) * \cdots * P\left(x_n|class\right) / P\left(data\right)
+    \end{aligned}
+    \end{split}
+    \end{equation}
+\caption{Where $P\left(class|data\right)$ is the probability of a class given the some data.}
+\end{equ}}
+
+
+\subsection{Bayes Optimal Classifier}
+\label{sec:bayes-optimal-classifier}
+
+The Bayes optimal classifier is a probabilistic model that makes the most likely prediction for a new example, given the training dataset. This model is also referred to as the Bayes optimal learner, the Bayes classifier, Bayes optimal decision boundary, or the Bayes optimal discriminant function.
+
+Global optimization is a challenging problem of finding an input that results in the minimum or maximum cost of a given objective function. Typically, the form of the objective function is complex and intractable to analyze and is often non-convex, nonlinear, high dimension, noisy, and computationally expensive to evaluate.
+
+Bayesian Optimization provides a principled technique based on Bayes Theorem to direct a search of a global optimization problem that is efficient and effective. It works by building a probabilistic model of the objective function, that is then searched efficiently with an acquisition function before candidate samples are chosen for evaluation on the real objective function.
+
+Global Optimization is a major use of the Bayes Optimal Classifier, which works in tandem with an objective function. In the equation below, we share how Bayes Optimal Classifier works, but keep in mind, this is not a part of our dissertation topic. We are including this in order to have a wider and complete understanding of the Bayesian Classification subject. 
+
+For the purpose of this equation, we figure out how to calculate the conditional probability for a new instance (vi) given the training data (D), given a space of hypotheses (H).
+
+\textbf{\begin{equ}[H]
+    \begin{equation}
+    \begin{split}
+    \begin{aligned}
+        \label{eq:bayes-optimal-classifier}
+        P\left(vj | D\right) = sum \{h in H\} P\left(vj | hi\right) * P\left(hi | D\right)
+    \end{aligned}
+    \end{split}
+    \end{equation}
+\caption{\textit{Where $vj$ is a new instance to be classified, $H$ is the set of hypotheses for classifying the instance, $hi$ is a given hypothesis, $P\left(vj | hi\right)$ is the posterior probability for $vi$ given hypothesis $hi$, and $P\left(hi | D\right)$ is the posterior probability of the hypothesis hi given the data $D$.}}
+\end{equ}}
+
+Now in the next and final theoretical chapter, we shall understand how we combine Markov Chains and Bayes' Theorem to predict which text is a part of which novel.
+
+

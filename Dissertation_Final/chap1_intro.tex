@@ -1,0 +1,49 @@
+% ------------------------------------------------------------------------------
+% Chapter 1
+% Delete this content and replace with your own
+% ------------------------------------------------------------------------------
+\chapter{Introduction} % enter the name of the chapter here
+\label{cha:introduction} % enter the chapter label here (for cross-referencing)
+
+With this dissertation, our goal is to use Markov Chains in textual data, specifically, Novels, to identify and predict which piece of text was tentatively written by a particular author. We shall perform this by creating an elementary Machine Learning model using two basic yet extremely important statistical concepts, i.e., Markov Chains and Bayes' Probability Rules. Combined, these two concepts can provide a really simple yet decent functioning model, which can identify small iterations in a piece of text and prove which text was tentatively written by which author. This simple classification and prediction model can still be used in multiple problems that various industries face. This includes plagiarism analysis of new or old novels, predicting whether any books released tried and replicated any books and thus, be flagged as unoriginal works.
+
+However, although this is not illegal by law if these books are already under the public domain, \textcite{murky-world-plagiarism}, some authors may try to pass off old works by previous authors as their own and not provide their due reference or credit. In order to ensure credit is given at the right places, a model similar to this, trained on a massive dataset can be used to identify similar pieces of text and writing styles among different authors. As an example, in our data, we have deliberately included two books by author Arthur Doyle. In a later section, we shall also see their probability distributions are similar in identifying the writing styles.
+
+Now, even though we have new and cutting-edge Neural Network models at our disposal available to identify such issues, Markov Chains still prove elementary yet a good option. The prediction may not be as effective, but they still help in identifying smaller errors. As an example, there is also a new issue propping up in academia, known as Ghost Writing. Neural Networks, perform much better than Markov Chains in words, characters, or subwords-based models but require a lot more training and the amount of data needed shall also be much higher to perform better. 
+
+\section{Data Source and Tools}
+\label{sec:data-source-tools}
+
+\subsection{Data Source}
+\label{sec:data-source-intro}
+
+We shall be using books procured from the platform, \href{https://www.gutenberg.org/}{Project Gutenberg}, which consists of novels where the U.S. copyright has expired and are available to download in various formats. The format we shall be downloading the books in eBook formats and have been proofread and edited by people voluntarily. 
+
+The formats available for free usage are HTML, Text files, Kindle, or EPUB/ePublication. All these books ensure the original text is being used, and in the case of a book from a different language, interpretations are as similar as possible. We shall discuss this part in detail in the chapter \ref{cha:novels-why}.
+
+\subsection{Tools}
+\label{sec:python-tools}
+
+\subsubsection{Python}
+
+We use Python as the coding language. Python is a high-level, interpreted, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation. Python is dynamically-typed and garbage-collected. It is also among the widely accessible languages and can be used on most platforms with minimal requirements. 
+
+\subsubsection{NumPy}
+
+This package of Python is used to perform some statistics. Nearly every scientist working in Python draws on the power of NumPy. NumPy brings the computational power of languages like C and Fortran to Python, a language much easier to learn and use. With this power comes simplicity: a solution in NumPy is often clear and elegant.
+
+\subsubsection{pandas}
+
+pandas is a fast, powerful, flexible, and easy-to-use open source data analysis and manipulation tool, built on top of the Python programming language. pandas aim to be the fundamental high-level building block for doing practical, real-world data analysis in Python. Additionally, it has the broader goal of becoming the most powerful and flexible open source data analysis/manipulation tool available in any language.
+
+\subsubsection{Scikit-learn}
+
+Scikit-learn (also known as sklearn) is a free software machine learning library for the Python programming language. It features various classification, regression and clustering algorithms including support-vector machines, random forests, gradient boosting, k-means, and DBSCAN, and is designed to inter-operate with the Python numerical and scientific libraries NumPy and SciPy.
+
+\subsubsection{Jupyter and IPython}
+
+Project Jupyter and its base IPython, is a community-run project with a goal to develop open-source software, open standards, and services for interactive computing across dozens of programming languages. Project Jupyter's name is a reference to the three core programming languages supported by Jupyter, which are Julia, Python, and R.  Project Jupyter has developed and supported the interactive computing products Jupyter Notebook, JupyterHub, and JupyterLab.
+
+\subsection{Wordcloud}
+
+This is just a small Python package, which acts like a piece of free open-source software, and helps generate a generic word cloud from any given piece of text with varying vocabularies, languages and specifically, works for words in the text. We shall be using this tool to create some analysis of what were the most widely used terms in each of the novels, which are the source of our data sets.
